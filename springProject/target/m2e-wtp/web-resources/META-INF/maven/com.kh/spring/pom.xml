@@ -19,7 +19,8 @@
 	
 	<!-- 프로젝트 정보 -->
 	<properties>
-		<!-- JDK 버전 : 우리는 11 임 -->
+		<!-- JDK 버전		: 우리는 11 임 -->
+		<!-- Spring 버전	: 우리는 5.3.14 임 -->
 		<java-version>11</java-version>
 		<org.springframework-version>5.3.14</org.springframework-version>
 		<org.aspectj-version>1.6.10</org.aspectj-version>
@@ -43,7 +44,7 @@
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-context</artifactId>
-			<version>${org.springframework-version}</version> <!-- 5.3.14 -->
+			<version>${org.springframework-version}</version> 	<!-- 5.3.14 -->
 			<exclusions>
 				<!-- Exclude Commons Logging in favor of SLF4j -->
 				<exclusion>
