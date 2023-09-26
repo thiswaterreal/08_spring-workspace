@@ -15,6 +15,8 @@
 		<result column="modify_date" property="modifyDate" />
 		<result column="status" property="status" />
 	</resultMap>
+	
+	
 
 	<!-- 비밀번호 암호화 전
 	<select id="loginMember" resultMap="memberResult">
@@ -55,6 +57,7 @@
 		 where status = 'Y'
 		   and user_id = #{userId}
 	</select>
+	
 	
 	<insert id="insertMember">
 		insert

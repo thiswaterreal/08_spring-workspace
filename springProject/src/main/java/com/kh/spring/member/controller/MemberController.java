@@ -257,6 +257,8 @@ public class MemberController {
 		String encPwd = bcryptPasswordEncoder.encode(m.getUserPwd());
 		//System.out.println("암호문 : " + encPwd);
 		
+		
+		
 		m.setUserPwd(encPwd); // Member 객체에 userPwd에 평문 => 암호문으로 변경
 		
 		int result = mService.insertMember(m);
@@ -268,6 +270,7 @@ public class MemberController {
 			model.addAttribute("errorMsg", "회원가입 실패!");
 			return "common/errorPage";
 		}
+		
 		
 	}
 	
