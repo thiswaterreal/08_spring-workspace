@@ -272,4 +272,32 @@ public class MemberController {
 	}
 	
 	
+	/** (단순jsp이동) 마이페이지 폼
+	 * @return
+	 */
+	@RequestMapping("myPage.me")
+	public String myPage() {
+		return "member/myPage";
+	}
+	
+	
+	/** 회원정보 수정
+	 * @param m
+	 */
+	@RequestMapping("update.me")
+	public void updateMember(Member m, Model model, HttpSession session) {
+		
+//		Member updateMem = mService.updateMember(m);
+//		
+//		if(updateMem != null) {
+//			session.setAttribute("loginMember", updateMem);
+//			session.setAttribute("alertMsg", "성공적으로 회원정보 수정되었습니다");
+//		}else {
+//			model.addAttribute("errorMsg", "회원정보 수정 실패!");
+//			return "common/errorPage";
+//		}
+		
+	}
+	
+	
 }

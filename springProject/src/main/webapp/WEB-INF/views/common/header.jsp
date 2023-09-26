@@ -94,7 +94,7 @@
                 	<c:otherwise>
                       	<!-- 로그인 후-->
                       	<label>${ loginMember.userName }님 환영합니다</label> &nbsp;&nbsp;
-                      	<a href="">마이페이지</a>
+                      	<a href="myPage.me">마이페이지</a>
                       	<a href="logout.me">로그아웃</a>     
                 	</c:otherwise>
                 </c:choose>
