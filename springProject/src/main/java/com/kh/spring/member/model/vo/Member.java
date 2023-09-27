@@ -16,11 +16,11 @@ import lombok.ToString;
  * 3. IDE 재실행
  */
 
-@NoArgsConstructor	//기본생성자
-@AllArgsConstructor	//매개변수생성자(전체)
-@Setter				//setter메소드
-@Getter				//getter메소드
-@ToString			//toString메소드
+//@NoArgsConstructor	//기본생성자
+//@AllArgsConstructor	//매개변수생성자(전체)
+//@Setter				//setter메소드
+//@Getter				//getter메소드
+//@ToString			//toString메소드
 public class Member {
 
 	 private String userId;
