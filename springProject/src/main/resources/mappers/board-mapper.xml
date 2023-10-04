@@ -2,4 +2,84 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
 <mapper namespace="boardMapper">
 
+
+	<resultMap id="boardResult" type="Board"> 	<!-- mybatis-config.xml에 등록해뒀음 -->
+		<result column="board_no" property="boardNo"/>
+		<result column="board_title" property="boardTitle"/>
+		<result column="board_writer" property="boardWriter"/>
+		<result column="board_content" property="boardContent"/>
+		<result column="count" property="count"/>
+		<result column="create_date" property="createDate"/>
+		<result column="origin_name" property="originName"/>
+		<result column="change_name" property="changeName"/>
+	</resultMap>
+
+
+
+	<select id="selectListCount" resultType="_int">
+		select
+			   count(*)
+		  from board
+		 where status = 'Y'
+	</select>
+
+	<select id="selectList" resultMap="boardResult">
+		select
+		       board_no
+		     , board_title
+		     , board_writer
+		     , count
+		     , to_char(create_date, 'YYYY-MM-DD') as "create_date" <!-- 원하는 형식으로 하기 위해 vo에서 String으로 맹긂 -->
+		  	 , origin_name
+		  from board
+		 where status = 'Y'
+		 order
+		    by board_no desc
+	</select>
+	
+	<insert id="insertBoard">
+		insert
+		  into board
+	  	  (
+	  	    board_no
+	  	  , board_title
+	  	  , board_writer
+	  	  , board_content
+	  	  , origin_name
+	  	  , change_name
+	  	  )
+		  values
+		  (
+		    seq_bno.nextval
+		  , #{boardTitle}  
+		  , #{boardWriter}  
+		  , #{boardContent}  
+		  , #{originName}  
+		  , #{changeName}  
+		  )
+	</insert>
+	
+	<update id="increaseCount">
+		update board
+		   set count = count + 1
+		 where board_no = #{boardNo}
+		   and status = 'Y'
+	</update>
+
+	<select id="selectBoard" resultMap="boardResult">
+		select 
+			   board_no
+			 , board_title
+			 , board_writer
+			 , board_content
+			 , origin_name
+			 , change_name
+			 , count
+			 , to_char(create_date, 'YYYY-MM-DD') as "create_date" 
+	     from board
+	    where board_no = #{boardNo}
+	</select>
+
+
+
 </mapper>

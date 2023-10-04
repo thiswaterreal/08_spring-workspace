@@ -23,27 +23,27 @@
            <form action="update.me" method="post">
                <div class="form-group">
                    <label for="userId">* ID :</label>
-                   <input type="text" class="form-control" id="userId" name="" value="${ loginMember.userId }" readonly><br>
+                   <input type="text" class="form-control" id="userId" name="userId" value="${ loginMember.userId }" readonly><br>
                    
                    <label for="userName">* Name :</label>
-                   <input type="text" class="form-control" id="userName" name="" value="${ loginMember.userName }" readonly><br>
+                   <input type="text" class="form-control" id="userName" name="userName" value="${ loginMember.userName }"><br>
                    
                    <label for="email"> &nbsp; Email :</label>
-                   <input type="email" class="form-control" id="email" name="" value="${ loginMember.email }"><br>
+                   <input type="email" class="form-control" id="email" name="email" value="${ loginMember.email }"><br>
                    
                    <label for="age"> &nbsp; Age :</label>
-                   <input type="number" class="form-control" id="age" name="" value="${ loginMember.age }"><br>
+                   <input type="number" class="form-control" id="age" name="age" value="${ loginMember.age }"><br>
                    
                    <label for="phone"> &nbsp; Phone :</label>
-                   <input type="tel" class="form-control" id="phone" name="" value="${ loginMember.phone }"><br>
+                   <input type="tel" class="form-control" id="phone" name="phone" value="${ loginMember.phone }"><br>
                    
                    <label for="address"> &nbsp; Address :</label>
-                   <input type="text" class="form-control" id="address" name="" value="${ loginMember.address }"><br>
+                   <input type="text" class="form-control" id="address" name="address" value="${ loginMember.address }"><br>
                    
                    <label for=""> &nbsp; Gender : </label> &nbsp;&nbsp;
-                   <input type="radio" name="" id="Male" value="M">
+                   <input type="radio" name="gender" id="Male" value="M">
                    <label for="Male">남자</label> &nbsp;&nbsp;
-                   <input type="radio" name="" id="Female" value="F">
+                   <input type="radio" name="gender" id="Female" value="F">
                    <label for="Female">여자</label><br>
                    
                    <c:if test="${ not empty loginMember.gender }">
@@ -98,7 +98,9 @@
                                    정말로 탈퇴 하시겠습니까?
                    </b>
 
-                   <form action="" method="post">
+                   <form action="delete.me" method="post">
+                   	   <!-- hidden -->
+                   	   <input type="hidden" name="userId" value="${ loginMember.userId }">
                            비밀번호 : 
                        <input type="password" name="userPwd" required>
                        <button type="submit" class="btn btn-danger">탈퇴하기</button>

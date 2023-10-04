@@ -8,6 +8,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.SystemPropertyUtils;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
@@ -284,23 +285,70 @@ public class MemberController {
 	}
 	
 	
-	/** 회원정보 수정
+	/** 회원정보 변경
 	 * @param m
+	 * @return
 	 */
 	@RequestMapping("update.me")
-	public void updateMember(Member m, Model model, HttpSession session) {
+	public String updateMember(Member m, Model model, HttpSession session) {
 		
-//		Member updateMem = mService.updateMember(m);
-//		
-//		if(updateMem != null) {
-//			session.setAttribute("loginMember", updateMem);
-//			session.setAttribute("alertMsg", "성공적으로 회원정보 수정되었습니다");
-//		}else {
-//			model.addAttribute("errorMsg", "회원정보 수정 실패!");
-//			return "common/errorPage";
-//		}
+		int result = mService.updateMember(m);
+		
+		if(result > 0) { // 수정 성공 => 회원정보 갈아끼우기
+			
+			// *** db로부터 수정된 회원정보를 다시 재조회!!
+			// *** session에 loginMember 키값으로 덮어씌워야함
+			Member updateMem = mService.loginMember(m);
+			session.setAttribute("loginMember", updateMem);
+			
+			// alert 띄워줄 문구 담기
+			session.setAttribute("alertMsg", "성공적으로 회원정보 변경되었습니다.");
+			// 마이페이지 url 재요청
+			return "redirect:myPage.me";
+			
+		}else { // 수정 실패 => 에러문구 담아서 에러페이지 포워딩
+			model.addAttribute("errorMsg", "회원정보 변경 실패!");
+			return "common/errorPage";
+		}
 		
 	}
+	
+	
+	/** 회원 탈퇴
+	 * @param userPwd
+	 * @param userId
+	 * @param model
+	 * @param session
+	 * @return
+	 */
+	@RequestMapping("delete.me")
+	public String deleteMember(String userPwd, String userId, Model model, HttpSession session) {
+		// userPwd : 회원탈퇴 요청시 사용자가 입력한 비밀번호 평문
+		// session에 loginMember Member 객체의 userPwd 필드 : db로부터 조회된 비번(암호문)
+		String encPwd = ((Member)session.getAttribute("loginMember")).getUserPwd();
+		
+		if(bcryptPasswordEncoder.matches(userPwd, encPwd)) { // true : 비번맞음 => 탈퇴처리
+			int result = mService.deleteMember(userId);
+			
+			if(result > 0) { // 탈퇴처리 성공 => session에 있는 loginMember 지움 + alert문구담기 => 메인페이지로 url 재요청
+				session.removeAttribute("loginMember");
+				session.setAttribute("alertMsg", "성공적으로 탈퇴되었습니다. 그동안 이용해주셔서 감사합니다.");
+				return "redirect:/";
+			}else { // 탈퇴처리 실패 => 에러문구 담아서 에러페이지 포워딩
+				model.addAttribute("errorMsg", "회원탈퇴 실패!");
+				return "common/errorPage";
+			}
+			
+		}else { // false : 비번틀림 => 비밀번호 틀림을 알리고 마이페이지로
+			session.setAttribute("alertMsg", "비밀번호를 잘못 입력하셨습니다. 다시 확인해주세요.");
+			return "redirect:myPage.me";
+		}
+		
+	}
+	
+	
+	
+	
 	
 	
 }
