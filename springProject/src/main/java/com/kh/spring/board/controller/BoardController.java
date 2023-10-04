@@ -122,7 +122,7 @@ public class BoardController {
 			
 			// *** 원본명, 서버업로드된 경로를 Board b에 이어서 담기 (db를 위한 작업)
 			b.setOriginName(upfile.getOriginalFilename());
-			b.setChangeName("rersources/uploadFiles/" + changeName);
+			b.setChangeName("resources/uploadFiles/" + changeName);
 			
 		}
 		

@@ -51,13 +51,13 @@
                     <th>첨부파일</th>
                     <td colspan="3">
                     	<c:choose>
-                    		<c:when test="${ not empty b.originName }">
+                    		<c:when test="${ empty b.originName }">
 	                    		<!-- 첨부파일이 없는 경우 -->
 	                    		첨부파일이 없습니다.
                     		</c:when>
                     		<c:otherwise>
 		                        <!-- 첨부파일이 있는 경우-->
-		                        <a href="해당 첨부파일의 경로(changeName)" download="해당 첨부파일의 원본명">피자.png</a>
+		                        <a href="${ b.changeName }" download="${ b.originName }">${ b.originName }</a>
                     		</c:otherwise>
                     	</c:choose>
                     </td>
