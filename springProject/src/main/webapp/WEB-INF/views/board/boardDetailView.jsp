@@ -43,9 +43,9 @@
                 </tr>
                 <tr>
                     <th>작성자</th>
-                    <td>user01</td>
+                    <td>${ b.boardWriter }</td>
                     <th>작성일</th>
-                    <td>2023-03-31</td>
+                    <td>${ b.createDate }</td>
                 </tr>
                 <tr>
                     <th>첨부파일</th>
@@ -67,7 +67,7 @@
                     <td colspan="3"></td>
                 </tr>
                 <tr>
-                    <td colspan="4"><p style="height:150px">피자가 먹고싶네오</p></td>
+                    <td colspan="4"><p style="height:150px">${ b.boardContent }</p></td>
                 </tr>
             </table>
             <br>
