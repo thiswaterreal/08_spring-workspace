@@ -37,8 +37,16 @@ public class BoardDao {
 		return sqlSession.update("boardMapper.increaseCount", boardNo);
 	}
 	
-	public Board selectBoard(SqlSessionTemplate sqlSession, int boardNo) {
+	public Board selectBoard(SqlSessionTemplate sqlSession, int boardNo) { // 반환형 헷갈리면 controller에서 최종으로 받고자 하는 자료형과 맞추면 됨 Board b = ..
 		return sqlSession.selectOne("boardMapper.selectBoard", boardNo);
+	}
+	
+	public int deleteBoard(SqlSessionTemplate sqlSession, int boardNo) {
+		return sqlSession.update("boardMapper.deleteBoard", boardNo);
+	}
+	
+	public int updateBoard(SqlSessionTemplate sqlSession, Board b) {
+		return sqlSession.update("boardMapper.updateBoard", b);
 	}
 	
 }

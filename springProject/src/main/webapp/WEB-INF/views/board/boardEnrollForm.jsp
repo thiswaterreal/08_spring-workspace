@@ -43,6 +43,7 @@
                      <tr>
                          <th><label for="upfile">첨부파일</label></th>
                          <td><input type="file" id="upfile" class="form-control-file border" name="upfile"></td>
+                         <!-- 첨부파일 여러개 첨부시, name 값 동일하게 -->
                      </tr>
                      <tr>
                          <th colspan="2"><label for="content">내용</label></th>

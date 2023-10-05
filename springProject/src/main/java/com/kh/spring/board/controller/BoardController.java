@@ -11,6 +11,7 @@ import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
@@ -76,7 +77,7 @@ public class BoardController {
 	
 	
 	/** (단순jsp이동) 글작성 폼
-	 * @return
+	 * 
 	 */
 	@RequestMapping("enrollForm.bo")
 	public String enrollForm() {
@@ -84,6 +85,16 @@ public class BoardController {
 		return "board/boardEnrollForm";
 	}
 
+	
+	
+	// ***** 만약 다중 첨부파일 하고싶다면?? *******************************************************
+	// boardEnrollForm.jsp (45번째줄 여러개 복사)
+	// 여러개의 input type="file" 요소에 다 동일한 키값(name)으로 부여 ex)upfile
+	// MultipartFile[] upfile 로 받으면 됨 (0번 인덱스부터 차곡차곡 첨부파일 담겨있음)
+	// public String insertBoard(MultipartFile[] upfile, ..) {
+	//		upfile[0].. for문 돌려서
+	// }
+	
 	
 	/** 게시글 작성하기 (첨부파일 포함)
 	 * 
@@ -145,9 +156,7 @@ public class BoardController {
 	
 	
 	/** 현재 넘어온 첨부파일 그 자체를 서버의 폴더에 저장시키는 역할
-	 * @param upfile
-	 * @param session
-	 * @return
+	 * 
 	 */
 	public String saveFile(MultipartFile upfile, HttpSession session) {
 		String originName = upfile.getOriginalFilename();	// "flower.png"
@@ -173,16 +182,22 @@ public class BoardController {
 		
 	}
 	
-	@RequestMapping("detail.bo")
-	public String selectBoard(@RequestParam(value="bno") int boardNo, Model model, HttpSession session) {
 	
-		System.out.println("bb : " + boardNo);
+	/** 게시글 상세페이지 조회 (+ 조회수 증가)
+	 * 
+	 */
+	@RequestMapping("detail.bo")
+	public String selectBoard(int bno, Model model, HttpSession session) {
+		//(@RequestParam(value="bno") int boardNo, .. )
+		//System.out.println("bno : " + bno);
 		
 		// bno에는 상세조회하고자 하는 해당 게시글 번호 담겨있음
-		//int boardNo = Integer.parseInt(request.getParameter("bno"));
+		//int boardNo = Integer.parseInt(request.getParameter("bno")); <= X
+		
 		
 		// 해당 게시글 조회수 증가 서비스 호출 결과 받기 (update 하고 옴. count +1)
-		int result = bService.increaseCount(boardNo);
+		int result = bService.increaseCount(bno);
+		
 		
 		// >> 성공적으로 조회수 증가
 		//			>> boardDetailView.jsp 상에 필요한 데이터 조회 (게시글 상세정보 조회 서비스 호출)
@@ -191,20 +206,118 @@ public class BoardController {
 		// >> 조회수 증가 실패
 		//			>> 에러문구 담아서 에러페이지 포워딩
 		if(result > 0) {
-			Board b = bService.selectBoard(boardNo);
+			Board b = bService.selectBoard(bno);
 		
-			
-			session.setAttribute("b", b);
+			//session.setAttribute("b", b);
+			model.addAttribute("b", b);
 			return "board/boardDetailView";
+			//mv.addObject("b", b).setViewName("board/boardDetailView");
 		}else {
 			model.addAttribute("errorMsg", "상세조회 실패!");
 			return "common/errorPage";
+			//mv.addObject("errorMsg", "상세조회실패").setViewName("common/errorPage");
 		}
-		
-		
+			//return mv (위 반환형도 ModelAndView로 바꾸)
 
 	}
 	
+	
+	/** 게시글 상세페이지에서 삭제
+	 * 
+	 */
+	@RequestMapping("delete.bo")
+	public String deleteBoard(int bno, String filePath, Model model, HttpSession session) { // jsp에서 boardNo, changeName숨겨서 넘겼음
+														  
+		int result = bService.deleteBoard(bno);
+		
+		if(result > 0) { // 삭제 성공 
+			// 첨부파일 있다면 파일까지 삭제 **
+			if(!filePath.equals("")) {
+				// filePath = "resources/uploadFiles/xxxx.jpg" | ""
+				
+				// resources안에 uploadFiles안에 xxxx.jpg 파일을 지워라
+				new File(session.getServletContext().getRealPath(filePath)).delete();
+			}
+			
+			// 게시판 리스트 페이지 list.bo url 재요청
+			session.setAttribute("alertMsg", "성공적으로 게시글이 삭제되었습니다.");
+			return "redirect:list.bo";
+		}else { // 삭제 실패 => 포워딩
+			model.addAttribute("errorMsg", "게시글 삭제 실패!");
+			return "common/errorPage";
+		}
+	}
+	
+	
+	/** (단순jsp이동) 글수정 폼
+	 * 
+	 */
+	@RequestMapping("updateForm.bo")
+	public String updateForm(int bno, Model model) {
+		
+		//Board b = bService.selectBoard(bno);
+		
+		model.addAttribute("b", bService.selectBoard(bno));
+		return "board/boardUpdateForm";
+	}
+	
+	
+	/** 게시글 수정하기 (첨부파일 포함)
+	 *
+	 */
+	@RequestMapping("update.bo")
+	public String updateBoard(@ModelAttribute Board b, MultipartFile reupfile, Model model, HttpSession session) { // 글 주렁주렁, 첨부파일
+		
+		// 새로 넘어온 첨부파일이 '있'을 경우
+		if(!reupfile.getOriginalFilename().equals("")) {
+			
+			// 기존에 첨부파일이 있었을 경우 => 기존의 첨부파일 지우기
+			if(b.getOriginName() != null) {
+				new File(session.getServletContext().getRealPath(b.getChangeName())).delete();
+			}
+			
+			// 새로 넘어온 첨부파일 서버 업로드 시키기 (위에 saveFile 만들어놓은거 호출 : 새로 이름 바꿔서 업로드해줌)
+			String changeName = saveFile(reupfile, session);
+			
+			// b에 새로 넘어온 첨부파일에 대한 원본명, 저장경로 담기
+			b.setOriginName(reupfile.getOriginalFilename());
+			b.setChangeName("resources/uploadFiles/" + changeName);
+		}
+		
+		/*
+		 * 	** 위에 한 작업 :
+		 *	
+		 *  b에 boardNo, boardTitle, boardContent 무조건 담겨 있음!! 
+		 *
+		 *	1. 기존 첨부 파일 X, 새로 첨부된 파일 X
+		 *		=> originName : null		|	changeName : null
+		 *
+		 *	2. 기존 첨부 파일 O, 새로 첨부된 파일 X
+		 *		=> originName : 기존첨파원본명	| 	changeName : 기존첨파저장경로
+		 *
+		 *	3. 기존 첨부 파일 X, 새로 첨부된 파일 O
+		 *		=> 새로 첨부된 파일 서버에 업로드(saveFile 호출해서)
+		 *		=> originName : 새로운첨파원본명	|	changeName : 새로운첨파저장경로
+		 *
+		 *	4. 기존 첨부 파일 O, 새로 첨부된 파일 O
+		 *		=> 기존의 파일 삭제
+		 *		=> 새로 첨부된 파일 서버에 업로드
+		 *		=> originName : 새로운첨파원본명	|	changeName : 새로운첨파저장경로
+		 *
+		 */
+		
+		int result = bService.updateBoard(b);
+		
+		if(result > 0) { // 수정 성공 => 상세페이지(detail.bo) + bno=? 가지고 재요청
+			session.setAttribute("alertMsg", "성공적으로 게시글이 수정되었습니다.");
+			return "redirect:detail.bo?bno=" + b.getBoardNo();
+		}else { // 수정 실패 => 포워딩
+			model.addAttribute("errorMsg", "게시글 수정 실패!");
+			return "common/errorPage";
+		}
+		
+	}
+
 	
 	
 }

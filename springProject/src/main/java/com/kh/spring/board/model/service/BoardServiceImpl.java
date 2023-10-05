@@ -50,24 +50,35 @@ public class BoardServiceImpl implements BoardService {
 	}
 
 	
+	/** 게시글 상세 조회수 증가
+	 *
+	 */
 	@Override
-	public int increaseCount(int boardNo) {
+	public int increaseCount(int boardNo) {	// controller에서 bno 였지만 여기선 boardNo 해도 노상관. 자료형만 같으면 됨
 		return bDao.increaseCount(sqlSession, boardNo);
 	}
 
+	
+	/** 게시글 상세페이지 조회
+	 *
+	 */
 	@Override
 	public Board selectBoard(int boardNo) {
 		return bDao.selectBoard(sqlSession, boardNo);
 	}
 
+	
+	/** 게시글 상세페이지에서 삭제
+	 *
+	 */
 	@Override
 	public int deleteBoard(int boardNo) {
-		return 0;
+		return bDao.deleteBoard(sqlSession, boardNo);
 	}
 
 	@Override
 	public int updateBoard(Board b) {
-		return 0;
+		return bDao.updateBoard(sqlSession, b);
 	}
 
 	@Override

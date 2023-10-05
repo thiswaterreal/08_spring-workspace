@@ -34,7 +34,7 @@
             <h2>게시글 상세보기</h2>
             <br>
             
-            <a class="btn btn-secondary" style="float:right" href="">목록으로</a>
+            <a class="btn btn-secondary" style="float:right" href="list.bo">목록으로</a>
             <br><br>
             <table id="contentArea" align="center" class="table">
                 <tr>
@@ -69,14 +69,48 @@
                 <tr>
                     <td colspan="4"><p style="height:150px">${ b.boardContent }</p></td>
                 </tr>
+                <tr>
+                    <th>첨부사진</th>
+                    <td colspan="3"></td>
+                </tr>
+                <tr>
+                    <td colspan="4"><img width="400px" src="${ b.changeName }"></td>
+                </tr>
             </table>
             <br>
 
-            <div align="center">
-                <!-- 수정하기, 삭제하기 버튼은 이글이 본인글일 경우만 보여져야됨 -->
-	                <a class="btn btn-primary" onclick="">수정하기</a> <!-- 요기에 href="" 를 작성하면 get방식이기 떄문에 노출된다. -->
-	                <a class="btn btn-danger" onclick="">삭제하기</a>
-            </div><br><br>
+			
+
+            <c:if test="${ loginMember.userId eq b.boardWriter }">
+	            <div align="center">
+	                <!-- 수정하기, 삭제하기 버튼은 이글이 본인글일 경우만 보여져야됨 -->
+	                <!-- 
+		                <a class="btn btn-primary" href="updateForm.bo?bno=${ b.boardNo }">수정하기</a>
+		                <a class="btn btn-danger" href="delete.bo?bno=${ b.boardNo }">삭제하기</a>
+	            	 -->
+	            	 	<!-- a태그가 아닌 button으로 해야할시, onclick 사용으로 boardNo넘기는 법 -->
+		                <a class="btn btn-primary" onclick="postFormSubmit(1);">수정하기</a>
+		                <a class="btn btn-danger" onclick="postFormSubmit(2);">삭제하기</a>
+	            </div><br><br>
+	            
+	            <form id="postForm" action="" method="post">
+	            	<input type="hidden" name="bno" value="${ b.boardNo }">
+	            	<input type="hidden" name="filePath" value="${ b.changeName }">
+	            </form>
+	            
+	            <script>
+	            	function postFormSubmit(num) {
+	            		
+	            		if(num == 1){ // '수정하기(1)' 클릭
+	            			$("#postForm").attr("action", "updateForm.bo").submit();
+	            		}else { // '삭제하기(2)' 클릭
+	            			$("#postForm").attr("action", "delete.bo").submit();	            			
+	            		}
+	            		
+	            	}
+	            </script>
+	            
+            </c:if>
             
     
 

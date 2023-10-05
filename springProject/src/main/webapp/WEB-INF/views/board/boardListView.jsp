@@ -89,7 +89,7 @@
 	                        <td>${ b.createDate }</td>
 	                        <td>
 	                        	<c:if test="${ not empty b.originName }">
-	                        		★
+	                        		🖼
 	                        	</c:if>
 	                        </td>
 	                    </tr>
@@ -98,7 +98,8 @@
             </table>
             <br>
 		
-			<!-- 해당 게시글 상세페이지로.. -->
+		
+			<!-- 해당 게시글 눌루해서 상세페이지로.. -->
 			<script>
 				$(function(){
 					$("#boardList>tbody>tr").click(function(){
