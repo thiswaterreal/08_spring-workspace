@@ -18,11 +18,12 @@
             <br>
 			
 			<!-- Controller에서 4번째 방법 쓸거기 때문에 반드시! name값 = vo필드명 동일하게! -->
-            <form action="insert.me" method="post">
+            <form action="insert.me" method="post" id="enrollForm">
                 <div class="form-group">
                     <label for="userId">* ID :</label>
                     <input type="text" class="form-control" id="userId" name="userId" placeholder="Please Enter ID" required>
-                    <div id="checkResult" style="font-size:0.8em"></div>
+                    <!-- 아이디 중복 확인 -->
+                    <div id="checkResult" style="font-size:0.8em; display:none"></div>
                     
                     <br>
                     <label for="userPwd">* Password :</label>
@@ -55,16 +56,63 @@
                 </div>
                 <br>
                 <div class="btns" align="center">
-                    <button id="enrollBtn" type="submit" class="btn btn-primary" >회원가입</button>
-                    <button type="reset" class="btn btn-danger"> 초기화</button>
+                    <button id="enrollBtn" type="submit" class="btn btn-primary" disabled>회원가입</button>
+                    <button type="reset" class="btn btn-danger">초기화</button>
                 </div>
             </form>
         </div>
-        
-      
+
         <br><br>
     </div>
 
+    <script>
+		$(function(){
+			// 아이디를 입력하는 input 요소객체 선택 => 변수에 담아두기
+			const $idInput = $("#enrollForm input[name=userId]");
+			
+			$idInput.keyup(function(){ //해당 input에 글자 작성할 때마다 실행되는..
+				//console.log($idInput.val());
+				
+				// 우선 최소 5글자 이상으로 입력되어있을때만 ajax 요청해서 중복체크 하도록
+				if($idInput.val().length >= 5){
+					
+					$.ajax({
+						url:"idCheck.me",
+						data:{//키:벨류
+							checkId:$idInput.val()
+						},
+						success:function(result){//controller에서 넘어온 값 아무 변수(result)로 받기 가넝
+							
+							if(result == "NNNNN"){//사용불가능
+								// => 빨간색메세지 '사용불가능' 출력
+								$("#checkResult").show();
+								$("#checkResult").css("color", "red").text("중복된 아이디가 존재합니다. 다시 입력해주세요.");
+								// => 버튼 비활성화
+								$("#enrollForm :submit").attr("disabled", true);
+							}else {//사용가능
+								// => 초록색메세지 '사용가능' 출력
+								$("#checkResult").show();
+								$("#checkResult").css("color", "green").text("사용 가능한 아이디 입니다!");
+								// 버튼 활성화
+								$("#enrollForm :submit").removeAttr("disabled");
+							}
+							
+						},
+						error:function(){
+							console.log("아이디 중복 체크용 ajax 통신 실패!")
+						}
+					})
+					
+				}else { //5글자 미만일 경우 => 버튼 비활성화, 메시지 숨기기
+					$("#checkResult").hide();
+					$("#enrollForm :submit").attr("disabled", true); // :submit == 타입이 submit인것
+				}
+			})
+			
+		})    
+    </script>
+        
+        
     <!-- 이쪽에 푸터바 포함할꺼임 -->
     <jsp:include page="../common/footer.jsp"/>
 

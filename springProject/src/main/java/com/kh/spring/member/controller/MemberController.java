@@ -11,6 +11,7 @@ import org.springframework.util.SystemPropertyUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.kh.spring.member.model.service.MemberServiceImpl;
@@ -217,8 +218,7 @@ public class MemberController {
 	
 	
 	/** 로그아웃
-	 * @param session
-	 * @return
+	 * 
 	 */
 	@RequestMapping("logout.me")
 	public String logoutMember(HttpSession session) {
@@ -228,7 +228,7 @@ public class MemberController {
 	
 	
 	/** (단순jsp이동) 회원가입 폼
-	 * @return
+	 *
 	 */
 	@RequestMapping("enrollForm.me")
 	public String enrollForm() {
@@ -238,7 +238,7 @@ public class MemberController {
 	
 	
 	/** 회원가입
-	 * @param m
+	 * 
 	 */
 	@RequestMapping("insert.me")
 	public String insertMember(Member m, Model model, HttpSession session) {
@@ -277,7 +277,7 @@ public class MemberController {
 	
 	
 	/** (단순jsp이동) 마이페이지 폼
-	 * @return
+	 * 
 	 */
 	@RequestMapping("myPage.me")
 	public String myPage() {
@@ -286,8 +286,7 @@ public class MemberController {
 	
 	
 	/** 회원정보 변경
-	 * @param m
-	 * @return
+	 *
 	 */
 	@RequestMapping("update.me")
 	public String updateMember(Member m, Model model, HttpSession session) {
@@ -315,11 +314,7 @@ public class MemberController {
 	
 	
 	/** 회원 탈퇴
-	 * @param userPwd
-	 * @param userId
-	 * @param model
-	 * @param session
-	 * @return
+	 *
 	 */
 	@RequestMapping("delete.me")
 	public String deleteMember(String userPwd, String userId, Model model, HttpSession session) {
@@ -347,7 +342,27 @@ public class MemberController {
 	}
 	
 	
+	/** 아이디 중복 체크 (ajax)
+	 * 
+	 */
+	@ResponseBody
+	@RequestMapping("idCheck.me")
+	public String idCheck(String checkId) { //jsp키값과 변수명 동일하게
+		
+		int count = mService.idCheck(checkId);
+		
+		/* (방법1)
+		if(count > 0) {// 이미 존재하는 아이디 => 사용 불가능(NNNNN)
+			return "NNNNN";
+		}else { // 사용 가능(NNNNY)
+			return "NNNNY";
+		}
+		*/
+		
+		// (방법2. 삼항연산자 조건?true일때반환결과:false일때반환결과)
+		return count > 0 ? "NNNNN" : "NNNNY";	// jsp 찾으면 안되니까 @ResponseBody
 	
+	}
 	
 	
 	
