@@ -82,7 +82,7 @@
 	
 	<c:if test="${ not empty alertMsg }">
 		<script>
-			alertify.alert("알려드린다! 무엇을?", "${ alertMsg }");
+			alertify.alert("👩🏻‍💻 알려드린다!", "${ alertMsg }");
 		</script>
 		<c:remove var="alertMsg" scope="session"/>
 	</c:if>
