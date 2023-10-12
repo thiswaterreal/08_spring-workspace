@@ -347,5 +347,15 @@ public class BoardController {
 	}
 	
 	
+	/**
+	 * 메인화면 top5 조회
+	 */
+	@ResponseBody // String 반환시 @ResponseBody , Gson 반환시 인코딩 필수!
+	@RequestMapping(value="topList.bo", produces="application/json; charset=utf-8")
+	public String ajaxTopBoardList() {	
+		ArrayList<Board> list = bService.selectTopBoardList();
+		//System.out.println(new Gson().toJson(list));
+		return new Gson().toJson(list);
+	}
 	
 }
