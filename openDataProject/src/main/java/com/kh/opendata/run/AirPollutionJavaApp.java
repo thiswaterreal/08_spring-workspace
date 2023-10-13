@@ -21,13 +21,14 @@ public class AirPollutionJavaApp {
    public static void main(String[] args) throws IOException {
       
 	   
-      //OpenAPI 서버로 요청하고자 하는 URL 만들기
+      //OpenAPI 서버로 요청하고자 하는 URL 만들기 / 홈페이지에서 미리보기 열어서 주소값 긁어오기(serviceKey 전까지)
       String url = "https://apis.data.go.kr/B552584/ArpltnInforInqireSvc/getCtprvnRltmMesureDnsty";
       url += "?serviceKey=" + serviceKey;
       url += "&sidoName=" + URLEncoder.encode("서울","UTF-8");	// 요청시 전달값 중 한글이 있을경우 encoding 해야됨
       url += "&returnType=json"; 								// xml(관상용) 또는 json 일 경우 여기서 바꿔줌
       
       //System.out.println(url);
+      
       // HttpURLConnection openApi 요청절차
       
       // 1. 요청하고자 하는 url 전달하면서 java.net.url객체생성
@@ -39,7 +40,8 @@ public class AirPollutionJavaApp {
       // 3. 요청에 필요한 header 설정하기
       urlConnection.setRequestMethod("GET");
       
-      // 4. 해당 OpenApi 서버로 요청보낸후 입력스트림을 통해서 응답 데이터 읽어들이기
+      // 4. 해당 OpenApi 외부 서버로 요청 보낸 후 '입력 스트림'을 통해서 응답 데이터 읽어들이기
+      // 보조스트림(BufferedReader) 쓰려면 => 기반스트림(new InputStreamReader(urlConnection.getInputStream())) 필요!!
       BufferedReader br = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
       
       String responseText = "";
@@ -86,7 +88,7 @@ public class AirPollutionJavaApp {
        */
       
       
-      // ** 열어봐서 {} => JsonObject / [] => JsonArray
+      // ** 열어봐서 {} => JsonObject ** [] => JsonArray **
       
       // JSONObject, JSONArray, JSONElement 이용해서 파싱 할 수 있음(gson 라이브러리) => 내가 원하는 데이터만을 추출할 수 있음
       // 각각의 item 정보를 => AirVO 객체에 담고 => ArrayList에 차곡차곡 쌓기
