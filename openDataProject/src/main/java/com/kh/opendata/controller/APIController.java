@@ -87,7 +87,7 @@ public class APIController {
 		
 		while((line=br.readLine()) != null) {
 			responseText += line;
-		}
+		}           
 	
 		br.close();
 		urlConnection.disconnect();
