@@ -97,6 +97,7 @@
 	            <form id="postForm" action="" method="post">
 	            	<input type="hidden" name="bno" value="${ b.boardNo }">
 	            	<input type="hidden" name="filePath" value="${ b.changeName }">
+	            	<!-- 첨파 여러개일 경우, name="filePath" value="${alist[0~4].changeName}" 하면 되나?? -->
 	            </form>
 	            
 	            <script>

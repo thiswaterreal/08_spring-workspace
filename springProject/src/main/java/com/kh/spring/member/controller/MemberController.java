@@ -74,11 +74,11 @@ public class MemberController {
 	@RequestMapping("login.me")
 	public String loginMember(@RequestParam(value="id", defaultValue="aaaa") String userId,
 							  @RequestParam(value="pwd") String userPwd) {
-		
+											// 화면에서의 name="pwd"
 		System.out.println("ID : " + userId);
 		System.out.println("PWD : " + userPwd);
 		
-		return "main";
+		return "main"; //머리 꼬리 숨어있음
 	}
 	*/
 	

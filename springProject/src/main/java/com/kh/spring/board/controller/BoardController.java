@@ -322,7 +322,7 @@ public class BoardController {
 	}
 
 	
-	/** 댓글 리스트 전체 조회
+	/** 댓글 리스트 전체 조회(ajax)
 	 * 
 	 */
 	@ResponseBody
@@ -337,7 +337,7 @@ public class BoardController {
 	
 	
 	/**
-	 * 댓글 작성
+	 * 댓글 작성 (ajax)
 	 */
 	@ResponseBody
 	@RequestMapping(value="rinsert.bo")
@@ -348,7 +348,7 @@ public class BoardController {
 	
 	
 	/**
-	 * 메인화면 top5 조회
+	 * 메인화면 top5 조회 (ajax)
 	 */
 	@ResponseBody // String 반환시 @ResponseBody , Gson 반환시 인코딩 필수!
 	@RequestMapping(value="topList.bo", produces="application/json; charset=utf-8")
